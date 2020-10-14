@@ -28,6 +28,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.*;
+
 /**
  * Tale工具类
  * <p>
@@ -45,8 +47,8 @@ public class TaleUtils {
      * 匹配邮箱正则
      */
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
-            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern SLUG_REGEX = Pattern.compile("^[A-Za-z0-9_-]{5,100}$", Pattern.CASE_INSENSITIVE);
+            compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", CASE_INSENSITIVE);
+    private static final Pattern SLUG_REGEX = compile("^[A-Za-z0-9_-]{5,100}$", CASE_INSENSITIVE);
     /**
      * markdown解析器
      */
@@ -73,7 +75,7 @@ public class TaleUtils {
      * @return
      */
     public static int getCurrentTime() {
-        return (int) (new Date().getTime() / 1000);
+        return (int) (System.currentTimeMillis()/1000);
     }
 
     /**
@@ -363,42 +365,42 @@ public class TaleUtils {
             cleanValue = cleanValue.replaceAll("\0", "");
 
             // Avoid anything between script tags
-            Pattern scriptPattern = Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE);
+            Pattern scriptPattern = compile("<script>(.*?)</script>", CASE_INSENSITIVE);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Avoid anything in a src='...' type of expression
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\\'(.*?)\\\'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            scriptPattern = compile("src[\r\n]*=[\r\n]*\\\'(.*?)\\\'", CASE_INSENSITIVE | MULTILINE | DOTALL);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\\"(.*?)\\\"", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            scriptPattern = compile("src[\r\n]*=[\r\n]*\\\"(.*?)\\\"", CASE_INSENSITIVE | MULTILINE | DOTALL);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Remove any lonesome </script> tag
-            scriptPattern = Pattern.compile("</script>", Pattern.CASE_INSENSITIVE);
+            scriptPattern = compile("</script>", CASE_INSENSITIVE);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Remove any lonesome <script ...> tag
-            scriptPattern = Pattern.compile("<script(.*?)>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            scriptPattern = compile("<script(.*?)>", CASE_INSENSITIVE | MULTILINE | DOTALL);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Avoid eval(...) expressions
-            scriptPattern = Pattern.compile("eval\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            scriptPattern = compile("eval\\((.*?)\\)", CASE_INSENSITIVE | MULTILINE | DOTALL);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Avoid expression(...) expressions
-            scriptPattern = Pattern.compile("expression\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            scriptPattern = compile("expression\\((.*?)\\)", CASE_INSENSITIVE | MULTILINE | DOTALL);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Avoid javascript:... expressions
-            scriptPattern = Pattern.compile("javascript:", Pattern.CASE_INSENSITIVE);
+            scriptPattern = compile("javascript:", CASE_INSENSITIVE);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Avoid vbscript:... expressions
-            scriptPattern = Pattern.compile("vbscript:", Pattern.CASE_INSENSITIVE);
+            scriptPattern = compile("vbscript:", CASE_INSENSITIVE);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
 
             // Avoid onload= expressions
-            scriptPattern = Pattern.compile("onload(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            scriptPattern = compile("onload(.*?)=", CASE_INSENSITIVE | MULTILINE | DOTALL);
             cleanValue = scriptPattern.matcher(cleanValue).replaceAll("");
         }
         return cleanValue;
